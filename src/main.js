@@ -18,8 +18,9 @@ function createWindows() {
       width: display.bounds.width,  // Match the display's width
       height: display.bounds.height, // Match the display's height
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
+        nodeIntegration: false,
+        contextIsolation: true,
+        preload: path.join(__dirname, 'preload.js'), // Add this
         affinity: 'main',
       },
     });
@@ -33,8 +34,10 @@ function createWindows() {
     }
     // Log position and size for debugging
     win.webContents.on('did-finish-load', () => {
+      win.webContents.send('set-display-id', index); // Assign display ID
       console.log(`Window ${index} position:`, win.getPosition(), 'size:', win.getSize());
     });
+
     // Quit the app when any window is closed
     win.on('closed', () => {
       app.quit();
