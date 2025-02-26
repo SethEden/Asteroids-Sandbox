@@ -10,44 +10,35 @@ let mainWindow;
 let additionalWindows = [];
 
 function createWindows() {
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      affinity: 'main',
-    },
-  });
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  mainWindow.webContents.openDevTools(); // Add this for debugging
-
-  // Quit the app when the main window is closed
-  mainWindow.on('closed', () => {
-    app.quit();
-  });
-
   const displays = screen.getAllDisplays();
   displays.forEach((display, index) => {
-    if (index > 0) {
-      const win = new BrowserWindow({
-        x: display.bounds.x,
-        y: display.bounds.y,
-        width: display.bounds.width,
-        height: display.bounds.height,
-        webPreferences: {
-          nodeIntegration: true,
-          contextIsolation: false,
-          affinity: 'main',
-        },
-      });
-      win.loadFile(path.join(__dirname, 'index.html'));
-      // Quit the app when any additional window is closed
-      win.on('closed', () => {
-        app.quit();
-      });
+    const win = new BrowserWindow({
+      x: display.bounds.x,          // Position at the display's top-left corner
+      y: display.bounds.y,
+      width: display.bounds.width,  // Match the display's width
+      height: display.bounds.height, // Match the display's height
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        affinity: 'main',
+      },
+    });
+    win.loadFile(path.join(__dirname, '../public/index.html'));
+    // Designate the first window (on primary display) as mainWindow
+    if (index === 0) {
+      mainWindow = win;
+      mainWindow.webContents.openDevTools(); // Keep for debugging
+    } else {
       additionalWindows.push(win);
     }
+    // Log position and size for debugging
+    win.webContents.on('did-finish-load', () => {
+      console.log(`Window ${index} position:`, win.getPosition(), 'size:', win.getSize());
+    });
+    // Quit the app when any window is closed
+    win.on('closed', () => {
+      app.quit();
+    });
   });
 }
 
