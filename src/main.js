@@ -1,5 +1,5 @@
 // main.js
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -8,6 +8,11 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow;
 let additionalWindows = [];
+let sharedState = {
+    initialized: false,
+    displayCount: 0,
+    views: []
+  };
 
 function createWindows() {
   const displays = screen.getAllDisplays();
@@ -28,13 +33,13 @@ function createWindows() {
     // Designate the first window (on primary display) as mainWindow
     if (index === 0) {
       mainWindow = win;
-      mainWindow.webContents.openDevTools(); // Keep for debugging
-    } else {
-      additionalWindows.push(win);
     }
+    mainWindow.webContents.openDevTools(); // Keep for debugging
+    additionalWindows.push(win);
     // Log position and size for debugging
     win.webContents.on('did-finish-load', () => {
-      win.webContents.send('set-display-id', index); // Assign display ID
+      win.webContents.send('set-display-info', { index, bounds: display.bounds });
+      console.log(`Sent to window ${index}:`, { index, bounds: display.bounds });
       console.log(`Window ${index} position:`, win.getPosition(), 'size:', win.getSize());
     });
 
@@ -44,6 +49,17 @@ function createWindows() {
     });
   });
 }
+
+ipcMain.handle('get-shared-state', () => {
+  return sharedState;
+});
+
+ipcMain.handle('set-shared-state', (event, newState) => {
+  sharedState = { ...sharedState, ...newState };
+  additionalWindows.forEach(win => {
+    win.webContents.send('shared-state-updated', sharedState);
+  });
+});
 
 app.on('ready', createWindows);
 
