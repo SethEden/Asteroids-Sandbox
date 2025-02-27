@@ -1,24 +1,24 @@
 {
-  "name": "asteroids-sandbox",
+  "name": "NWjs-sandbox",
   "version": "0.0.1",
   "main": "index.html",
   "type": "module",
   "scripts": {
     "start": "nw .",
-    "clean": "if exist C:\\Proj\\Asteroids-out rmdir /s /q C:\\Proj\\Asteroids-out",
+    "clean": "if exist C:\\Proj\\NWjs-out rmdir /s /q C:\\Proj\\NWjs-out",
     "build": "npm run clean && node build.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SethEden/Asteroids-Sandbox.git"
+    "url": "git+https://github.com/SethEden/NWjs-Sandbox.git"
   },
   "keywords": [],
   "author": "Seth Hollingsead",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SethEden/Asteroids-Sandbox/issues"
+    "url": "https://github.com/SethEden/NWjs-Sandbox/issues"
   },
-  "homepage": "https://github.com/SethEden/Asteroids-Sandbox#readme",
+  "homepage": "https://github.com/SethEden/NWjs-Sandbox#readme",
   "description": "A sandbox for testing out the Babylon.js library.",
   "window": {
     "icon": "./assets/icon.ico",

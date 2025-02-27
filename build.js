@@ -6,8 +6,8 @@ nwbuild({
   flavor: 'normal',  // Use 'sdk' if you need dev tools
   arch: 'x64',
   cacheDir: './node_modules/nw',
-  srcDir: 'C:/Proj/Asteroids-Sandbox',
-  outDir: 'C:/Proj/Asteroids-out',
+  srcDir: 'C:/Proj/NWjs-Sandbox',
+  outDir: 'C:/Proj/NWjs-out',
   platform: 'win',
   logLevel: 'debug'  // Keep this for detailed output
 })
