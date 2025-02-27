@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+// import fs from 'fs';
+// import path from 'path';
 
 // Generate a unique log file name with a formatted timestamp
 function getFormattedTimestamp() {
@@ -20,9 +22,25 @@ function logToFile(message) {
   fs.appendFileSync(logFilePath, `${new Date().toISOString()} - ${message}\n`);
 }
 
-logToFile('YO YO word up!!, World world!');
-document.addEventListener('DOMContentLoaded', () => {
-  logToFile('Hello, World!');
-  nw.Window.get().maximize();
+logToFile('main: Starting main.js');
+
+logToFile('main: YO YO word up!!, World world!');
+document.addEventListener('DOMContentLoaded', async () => {
+  logToFile('main: Hello, World!');
+
+  try {
+    // Dynamically import the nw module
+    // const nw = await import('nw');
+    // logToFile('We got the NW dynamically!!!');
+    // nw.Window.get().maximize();
+    logToFile('main: Importing warden module');
+    const warden = await import('./warden.mjs');
+    logToFile('main: Warden module imported successfully');
+    logToFile('main: logFilePath is: ' + logFilePath);
+    warden.initialize(logFilePath);
+    logToFile('main: Warden module initialized');
+  } catch (error) {
+    logToFile(`main: Error importing warden module: ${error.message}`);
+  }
 });
-logToFile('Hello, World world!');
+logToFile('main: Hello, World world!');
